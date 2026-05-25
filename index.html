@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Music Dashboard</title>
+    <title>Ultimate DJ Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,7 +26,8 @@
 
     <div class="music-player">
         <div class="player-header">
-            <button id="theme-btn" title="Switch Theme">🎨 Switch Theme</button>
+            <button id="record-btn" title="Record your DJ set">🔴 Record Mix</button>
+            <button id="theme-btn" title="Switch Theme">🎨 Theme</button>
         </div>
 
         <div class="cover-wrapper" id="cover-wrapper">
@@ -64,15 +65,105 @@
                 <input type="range" id="volume-bar" min="0" max="1" step="0.05" value="1">
                 <span>🔊</span>
             </div>
+        </div>
+    </div>
+
+    <div class="dj-card">
+        <h3>🎧 DJ Mixer</h3>
+        
+        <div class="dj-section">
+            <div class="dj-header-row">
+                <h4>Hot Cues</h4>
+            </div>
+            <div class="loop-controls">
+                <button id="cue-1" class="dj-btn loop-btn">Set 1</button>
+                <button id="cue-2" class="dj-btn loop-btn">Set 2</button>
+                <button id="cue-3" class="dj-btn loop-btn">Set 3</button>
+            </div>
+            <button id="clear-cues-btn" class="dj-btn">Clear Cues</button>
+        </div>
+
+        <div class="dj-section">
+            <h4>3-Band EQ</h4>
             <div class="slider-group">
-                <span class="eq-label">Bass</span>
-                <input type="range" id="bass-bar" min="-15" max="15" step="1" value="0">
+                <span class="eq-label">High</span>
+                <input type="range" id="eq-high" min="-15" max="15" step="1" value="0">
             </div>
             <div class="slider-group">
-                <span class="eq-label">Treble</span>
-                <input type="range" id="treble-bar" min="-15" max="15" step="1" value="0">
+                <span class="eq-label">Mid</span>
+                <input type="range" id="eq-mid" min="-15" max="15" step="1" value="0">
+            </div>
+            <div class="slider-group">
+                <span class="eq-label">Low</span>
+                <input type="range" id="eq-low" min="-15" max="15" step="1" value="0">
             </div>
         </div>
+
+        <div class="dj-section">
+            <div class="dj-header-row">
+                <h4>Filter Sweep</h4>
+                <span id="filter-label" class="dj-value">OFF</span>
+            </div>
+            <div class="slider-group">
+                <span title="Low-Pass (Muffled)">LPF</span>
+                <input type="range" id="filter-bar" min="-100" max="100" step="1" value="0">
+                <span title="High-Pass (Thin)">HPF</span>
+            </div>
+            <button id="reset-filter-btn" class="dj-btn">Reset Filter</button>
+        </div>
+
+        <div class="dj-section">
+            <div class="dj-header-row">
+                <h4>Space FX</h4>
+                <span id="fx-label" class="dj-value">DRY</span>
+            </div>
+            <div class="slider-group">
+                <span class="eq-label">Echo</span>
+                <input type="range" id="echo-amount" min="0" max="0.8" step="0.05" value="0">
+            </div>
+            <div class="slider-group">
+                <span class="eq-label">Reverb</span>
+                <input type="range" id="reverb-amount" min="0" max="1" step="0.05" value="0">
+            </div>
+        </div>
+
+        <div class="dj-section">
+            <div class="dj-header-row">
+                <h4>Tempo</h4>
+                <span id="tempo-label" class="dj-value">1.00x</span>
+            </div>
+            <div class="slider-group">
+                <span>🐌</span>
+                <input type="range" id="tempo-bar" min="0.5" max="1.5" step="0.01" value="1">
+                <span>🐇</span>
+            </div>
+            <button id="reset-tempo-btn" class="dj-btn">Reset Tempo</button>
+        </div>
+
+        <div class="dj-section">
+            <div class="dj-header-row">
+                <h4>Panning</h4>
+                <span id="pan-label" class="dj-value">Center</span>
+            </div>
+            <div class="slider-group">
+                <span>L</span>
+                <input type="range" id="pan-bar" min="-1" max="1" step="0.05" value="0">
+                <span>R</span>
+            </div>
+        </div>
+
+        <div class="dj-section">
+            <div class="dj-header-row">
+                <h4>A/B Looper</h4>
+                <span id="loop-label" class="dj-value">OFF</span>
+            </div>
+            <div class="loop-controls">
+                <button id="loop-a-btn" class="dj-btn loop-btn">Set A</button>
+                <button id="loop-b-btn" class="dj-btn loop-btn">Set B</button>
+            </div>
+            <button id="clear-loop-btn" class="dj-btn">Clear Loop</button>
+        </div>
+
     </div>
 
 </div>
