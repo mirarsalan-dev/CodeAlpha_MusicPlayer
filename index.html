@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate DJ Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="app-container">
-
     <div class="management-card">
-        <h3>🎵 Your Library</h3>
+        <h3><i class="ph-fill ph-music-notes-simple"></i> Your Library</h3>
         
         <div id="drop-zone">
-            Drop MP3s here or click to add
+            <i class="ph-duotone ph-folder-open drop-icon"></i>
+            <br>Drop MP3s here or click to add
             <input type="file" id="file-input" multiple accept="audio/*">
         </div>
 
@@ -26,8 +28,12 @@
 
     <div class="music-player">
         <div class="player-header">
-            <button id="record-btn" title="Record your DJ set">🔴 Record Mix</button>
-            <button id="theme-btn" title="Switch Theme">🎨 Theme</button>
+            <button id="record-btn" title="Record your DJ set">
+                <i class="ph-fill ph-record"></i> Record Mix
+            </button>
+            <button id="theme-btn" title="Switch Theme">
+                <i class="ph-fill ph-palette"></i> Theme
+            </button>
         </div>
 
         <div class="cover-wrapper" id="cover-wrapper">
@@ -40,7 +46,7 @@
         </div>
 
         <div class="lyrics-container">
-            <p id="current-lyric">🎵</p>
+            <p id="current-lyric"><i class="ph-duotone ph-music-notes"></i></p>
         </div>
 
         <canvas id="visualizer"></canvas>
@@ -52,24 +58,24 @@
         </div>
 
         <div class="controls">
-            <button id="shuffle-btn" title="Shuffle">🔀</button>
-            <button id="prev-btn" title="Previous (Left Arrow)">⏮</button>
-            <button id="play-btn" title="Play/Pause (Space)">▶️</button>
-            <button id="next-btn" title="Next (Right Arrow)">⏭</button>
-            <button id="repeat-btn" title="Repeat">🔁</button>
+            <button id="shuffle-btn" title="Shuffle"><i class="ph-bold ph-shuffle"></i></button>
+            <button id="prev-btn" title="Previous (Left Arrow)"><i class="ph-fill ph-skip-back"></i></button>
+            <button id="play-btn" title="Play/Pause (Space)"><i class="ph-fill ph-play-circle"></i></button>
+            <button id="next-btn" title="Next (Right Arrow)"><i class="ph-fill ph-skip-forward"></i></button>
+            <button id="repeat-btn" title="Repeat"><i class="ph-bold ph-repeat"></i></button>
         </div>
 
         <div class="audio-controls">
             <div class="slider-group">
-                <span>🔈</span>
+                <i class="ph-fill ph-speaker-low vol-icon"></i>
                 <input type="range" id="volume-bar" min="0" max="1" step="0.05" value="1">
-                <span>🔊</span>
+                <i class="ph-fill ph-speaker-high vol-icon"></i>
             </div>
         </div>
     </div>
 
     <div class="dj-card">
-        <h3>🎧 DJ Mixer</h3>
+        <h3><i class="ph-fill ph-sliders-horizontal"></i> DJ Mixer</h3>
         
         <div class="dj-section">
             <div class="dj-header-row">
@@ -133,9 +139,9 @@
                 <span id="tempo-label" class="dj-value">1.00x</span>
             </div>
             <div class="slider-group">
-                <span>🐌</span>
+                <i class="ph-fill ph-tortoise tempo-icon"></i>
                 <input type="range" id="tempo-bar" min="0.5" max="1.5" step="0.01" value="1">
-                <span>🐇</span>
+                <i class="ph-fill ph-rabbit tempo-icon"></i>
             </div>
             <button id="reset-tempo-btn" class="dj-btn">Reset Tempo</button>
         </div>
@@ -163,9 +169,7 @@
             </div>
             <button id="clear-loop-btn" class="dj-btn">Clear Loop</button>
         </div>
-
     </div>
-
 </div>
 
 <script src="script.js"></script>

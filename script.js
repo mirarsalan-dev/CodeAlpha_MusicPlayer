@@ -1,8 +1,6 @@
 const defaultCover = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a1a1aa' width='150' height='150'><path d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/></svg>";
 
-// --- PLAYLIST EMPTIED ---
 const songs = [];
-
 let currentSongIndex = 0;
 let isPlaying = false, isShuffle = false, isRepeat = false;
 let parsedLyrics = [];
@@ -67,40 +65,32 @@ function initAudioGraph() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     source = audioCtx.createMediaElementSource(audio);
     
-    // 1. EQ & Panning
     lowFilter = audioCtx.createBiquadFilter(); lowFilter.type = "lowshelf"; lowFilter.frequency.value = 250; lowFilter.gain.value = eqLowBar.value;
     midFilter = audioCtx.createBiquadFilter(); midFilter.type = "peaking"; midFilter.frequency.value = 1000; midFilter.Q.value = 1; midFilter.gain.value = eqMidBar.value;
     highFilter = audioCtx.createBiquadFilter(); highFilter.type = "highshelf"; highFilter.frequency.value = 6000; highFilter.gain.value = eqHighBar.value;
     sweepFilter = audioCtx.createBiquadFilter(); sweepFilter.type = "allpass"; 
     stereoPanner = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : audioCtx.createPanner(); 
 
-    // 2. Echo FX
     delayNode = audioCtx.createDelay(2.0); delayNode.delayTime.value = 0.4;
     feedbackGain = audioCtx.createGain(); feedbackGain.gain.value = echoAmtBar.value;
 
-    // 3. Reverb FX
     reverbNode = audioCtx.createConvolver();
     reverbNode.buffer = createReverbBuffer(audioCtx, 3, 2); 
     reverbGain = audioCtx.createGain(); reverbGain.gain.value = reverbAmtBar.value;
 
-    // 4. Master Compressor
     masterCompressor = audioCtx.createDynamicsCompressor();
     masterCompressor.threshold.value = -3; 
     masterCompressor.ratio.value = 4;
 
-    // 5. Analyser & Outputs
     analyser = audioCtx.createAnalyser(); analyser.fftSize = 256; 
     streamDestination = audioCtx.createMediaStreamDestination(); 
     
-    // Connect Core Chain
     source.connect(lowFilter); lowFilter.connect(midFilter); midFilter.connect(highFilter); highFilter.connect(sweepFilter); sweepFilter.connect(stereoPanner);
     
-    // Branching
     stereoPanner.connect(masterCompressor); 
     stereoPanner.connect(delayNode); delayNode.connect(feedbackGain); feedbackGain.connect(delayNode); feedbackGain.connect(masterCompressor);
     stereoPanner.connect(reverbNode); reverbNode.connect(reverbGain); reverbGain.connect(masterCompressor);
 
-    // Final Output Routing
     masterCompressor.connect(analyser);
     analyser.connect(audioCtx.destination); 
     analyser.connect(streamDestination); 
@@ -127,7 +117,7 @@ function initAudioGraph() {
     isVisualizerInitialized = true;
 }
 
-// --- MIX RECORDER LOGIC ---
+// --- MIX RECORDER LOGIC (Updated to use Icons) ---
 recordBtn.addEventListener("click", () => {
     initAudioGraph(); 
     if (!isRecording) {
@@ -147,12 +137,12 @@ recordBtn.addEventListener("click", () => {
         };
         mediaRecorder.start();
         isRecording = true;
-        recordBtn.textContent = "⏹️ Stop Recording";
+        recordBtn.innerHTML = '<i class="ph-fill ph-stop"></i> Stop Recording';
         recordBtn.classList.add("recording");
     } else {
         mediaRecorder.stop();
         isRecording = false;
-        recordBtn.textContent = "🔴 Record Mix";
+        recordBtn.innerHTML = '<i class="ph-fill ph-record"></i> Record Mix';
         recordBtn.classList.remove("recording");
     }
 });
@@ -234,12 +224,21 @@ function parseLRC(lrcString) {
     return parsed;
 }
 
-// --- CORE PLAYBACK ---
+// --- CORE PLAYBACK (Updated to use Icons) ---
 function safePlay() {
     if (songs.length === 0) return;
     const playPromise = audio.play();
     if (playPromise !== undefined) {
-        playPromise.then(() => { isPlaying = true; playBtn.textContent = "⏸️"; coverWrapper.classList.add("playing"); audio.playbackRate = tempoBar.value; }).catch(e => { isPlaying = false; playBtn.textContent = "▶️"; coverWrapper.classList.remove("playing"); });
+        playPromise.then(() => { 
+            isPlaying = true; 
+            playBtn.innerHTML = '<i class="ph-fill ph-pause-circle"></i>'; 
+            coverWrapper.classList.add("playing"); 
+            audio.playbackRate = tempoBar.value; 
+        }).catch(e => { 
+            isPlaying = false; 
+            playBtn.innerHTML = '<i class="ph-fill ph-play-circle"></i>'; 
+            coverWrapper.classList.remove("playing"); 
+        });
     }
 }
 
@@ -255,11 +254,18 @@ async function loadSong(index) {
     updatePlaylistUI();
 
     if (song.lrc) {
-        parsedLyrics = parseLRC(song.lrc); currentLyricEl.textContent = parsedLyrics.length > 0 ? "🎵" : "No lyrics available";
+        parsedLyrics = parseLRC(song.lrc); currentLyricEl.innerHTML = parsedLyrics.length > 0 ? '<i class="ph-duotone ph-music-notes"></i>' : "No lyrics available";
     } else {
-        currentLyricEl.textContent = "🔍 Searching..."; parsedLyrics = [];
+        currentLyricEl.innerHTML = '<i class="ph-bold ph-magnifying-glass"></i> Searching...'; parsedLyrics = [];
         const apiLyrics = await fetchLyrics(song.title);
-        if (apiLyrics) { song.lrc = apiLyrics; parsedLyrics = parseLRC(apiLyrics); currentLyricEl.textContent = "✅ Lyrics Found!"; setTimeout(() => { if (currentLyricEl.textContent === "✅ Lyrics Found!") currentLyricEl.textContent = "🎵"; }, 2000); } 
+        if (apiLyrics) { 
+            song.lrc = apiLyrics; 
+            parsedLyrics = parseLRC(apiLyrics); 
+            currentLyricEl.innerHTML = '<i class="ph-bold ph-check-circle"></i> Lyrics Found!'; 
+            setTimeout(() => { 
+                if (currentLyricEl.textContent.includes("Lyrics Found!")) currentLyricEl.innerHTML = '<i class="ph-duotone ph-music-notes"></i>'; 
+            }, 2000); 
+        } 
         else currentLyricEl.textContent = "No lyrics available";
     }
 }
@@ -272,7 +278,12 @@ function formatTime(seconds) {
 
 function togglePlay() {
     if (songs.length === 0) return; 
-    if (isPlaying) { audio.pause(); isPlaying = false; playBtn.textContent = "▶️"; coverWrapper.classList.remove("playing"); } 
+    if (isPlaying) { 
+        audio.pause(); 
+        isPlaying = false; 
+        playBtn.innerHTML = '<i class="ph-fill ph-play-circle"></i>'; 
+        coverWrapper.classList.remove("playing"); 
+    } 
     else safePlay();
 }
 
@@ -302,9 +313,9 @@ audio.addEventListener("timeupdate", () => {
     if (!audio.paused && audio.duration) progressBar.value = currentTime;
 
     if (parsedLyrics.length > 0) {
-        let activeLyric = "🎵";
+        let activeLyric = '<i class="ph-duotone ph-music-notes"></i>';
         for (let i = 0; i < parsedLyrics.length; i++) { if (currentTime >= parsedLyrics[i].time) activeLyric = parsedLyrics[i].text; else break; }
-        if (currentLyricEl.textContent !== activeLyric) currentLyricEl.textContent = activeLyric;
+        if (currentLyricEl.innerHTML !== activeLyric && currentLyricEl.textContent !== activeLyric) currentLyricEl.innerHTML = activeLyric;
     }
 });
 audio.addEventListener("ended", nextSong);
@@ -322,11 +333,12 @@ document.addEventListener("keydown", (e) => {
     if (e.code === "ArrowLeft") { e.preventDefault(); prevSong(); }
 });
 
-// --- PLAYLIST & FILES ---
+// --- PLAYLIST & FILES (Updated to use Icons) ---
 function renderPlaylist() {
     playlistEl.innerHTML = "";
     songs.forEach((song, index) => {
-        const li = document.createElement("li"); li.textContent = `${song.title} - ${song.artist}`;
+        const li = document.createElement("li"); 
+        li.innerHTML = `<i class="ph-fill ph-file-audio"></i> ${song.title} - ${song.artist}`;
         li.addEventListener("click", () => { currentSongIndex = index; loadSong(currentSongIndex); initAudioGraph(); safePlay(); });
         playlistEl.appendChild(li);
     });
